@@ -4,6 +4,7 @@
 
 ```elvish
     epm:imstall github.com/chlorm/elvish-ssh
-    use github.com/chlorm/elvish-ssh/init-instance
-    use github.com/chlorm/elvish-ssh/init-session
+    use github.com/chlorm/elvish-ssh/agent
+    agent:init-instance
+    agent:init-session
 ```
