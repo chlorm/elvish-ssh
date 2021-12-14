@@ -23,7 +23,7 @@ var SOCKET-CONTROL = (path:join $SOCKET-DIR 'control')
 var SOCKET-PKCS11 = (path:join $SOCKET-DIR 'pkcs11')
 var SOCKET-SSH = (path:join $SOCKET-DIR 'ssh')
 
-fn set-permissions [agent]{
+fn set-permissions {|agent|
     os:chmod 0700 $SOCKET-DIR
     var sockets = [
         $SOCKET-CONTROL

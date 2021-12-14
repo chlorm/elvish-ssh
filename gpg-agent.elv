@@ -40,7 +40,7 @@ fn get-pinentry-cmd {
     put (utils:get-preferred-cmd 'PREFERRED_PINENTRY_CMDS' $pinentryCmds)
 }
 
-fn set-permissions [agent]{
+fn set-permissions {|agent|
     var home = (path:home)
     os:chmod 0700 $home
     os:chmod 0700 (path:join $home '.gnupg')

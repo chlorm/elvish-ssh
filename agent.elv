@@ -46,7 +46,7 @@ fn get-cmd {
     put (utils:get-preferred-cmd 'PREFERRED_SSH_AGENTS' $agent-cmds)
 }
 
-fn get-socket [agent]{
+fn get-socket {|agent|
     if (==s $s-gnome-keyring $agent) {
         put $gnome-keyring:SOCKET-SSH
     } elif (==s $s-gpg-agent $agent) {
@@ -57,7 +57,7 @@ fn get-socket [agent]{
     fail
 }
 
-fn cache-write [agent]{
+fn cache-write {|agent|
     os:makedir $CACHE-DIR
     os:chmod 0700 $CACHE-DIR
     print (get-socket $agent) >$CACHE-SOCKET
@@ -74,7 +74,7 @@ fn cache-read {
 
 # NOTE: This is only meant as a fallback if the agent isn't running. It is
 #       recommended to start the needed agents with your service manager.
-fn start-manually [agent]{
+fn start-manually {|agent|
     if (==s $s-gnome-keyring $agent) {
         $gnome-keyring:start
     } elif (==s $s-gpg-agent $agent) {
@@ -86,7 +86,7 @@ fn start-manually [agent]{
 }
 
 var proper-iter = 1
-fn check-proper [agent]{
+fn check-proper {|agent|
     var running = $false
     if (e:pidof '-q' $agent) {
         set running = $true

@@ -21,7 +21,7 @@ use github.com/chlorm/elvish-xdg/xdg-dirs
 
 var SOCKET = (path:join (xdg-dirs:runtime-dir) 'ssh-agent.socket')
 
-fn set-permissions [agent]{
+fn set-permissions {|agent|
     os:chmod 0600 $SOCKET
 }
 

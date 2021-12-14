@@ -18,7 +18,7 @@ use github.com/chlorm/elvish-stl/path
 use github.com/chlorm/elvish-stl/wrap
 
 
-fn generate [&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$false]{
+fn generate {|&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$false|
     var types = [
         'ecdsa'
         'ed25519'
@@ -34,7 +34,7 @@ fn generate [&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$f
         set name = $date'-'$device-name
     }
 
-    fn if-sk [s]{
+    fn if-sk {|s|
         if $security-key {
             put $s
         }
