@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
+use github.com/chlorm/elvish-stl/exec
 use github.com/chlorm/elvish-stl/path
-use github.com/chlorm/elvish-stl/wrap
 use github.com/chlorm/elvish-xdg/xdg-dirs
 
 
@@ -38,7 +38,7 @@ fn set-permissions {|agent|
 # Manually envoke gnome-keyring-daemon
 fn start {
     var cmd = [(
-        wrap:cmd-out 'gnome-keyring-daemon' ^
+        exec:cmd-out 'gnome-keyring-daemon' ^
         '--components' 'ssh,secrets,pkcs11' ^
         '--control-directory' $SOCKET-DIR ^
         '--daemonize'

@@ -21,10 +21,10 @@ use str
 use github.com/chlorm/elvish-ssh/gnome-keyring
 use github.com/chlorm/elvish-ssh/gpg-agent
 use github.com/chlorm/elvish-ssh/ssh-agent
+use github.com/chlorm/elvish-stl/exec
 use github.com/chlorm/elvish-stl/io
 use github.com/chlorm/elvish-stl/os
 use github.com/chlorm/elvish-stl/utils
-use github.com/chlorm/elvish-stl/wrap
 use github.com/chlorm/elvish-xdg/xdg-dirs
 
 
@@ -96,7 +96,7 @@ fn check-proper {|agent|
         # If the agent is running on a socket that isn't the expected one we
         # must kill the daemon and restart it manually.
         if (not (os:is-socket (get-socket $agent))) {
-            wrap:cmd e:kill (wrap:cmd-out 'pidof' $agent)
+            exec:cmd e:kill (exec:cmd-out 'pidof' $agent)
             unset-env 'SSH_AGENT_PID'
             unset-env 'SSH_AUTH_SOCK'
             start-manually $agent
@@ -114,7 +114,7 @@ fn check-proper {|agent|
 }
 
 fn init-instance {
-    var tty = (wrap:cmd-out 'tty')
+    var tty = (exec:cmd-out 'tty')
     set-env 'GPG_TTY' $tty
     set-env 'SSH_TTY' $tty
     cache-read
