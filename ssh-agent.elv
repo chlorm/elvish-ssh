@@ -13,9 +13,9 @@
 # limitations under the License.
 
 
-use str
 use github.com/chlorm/elvish-stl/exec
 use github.com/chlorm/elvish-stl/path
+use github.com/chlorm/elvish-stl/str
 use github.com/chlorm/elvish-xdg/xdg-dirs
 
 

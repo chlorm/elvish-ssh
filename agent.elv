@@ -17,10 +17,10 @@
 # if it isn't running.
 
 
-use str
 use github.com/chlorm/elvish-ssh/gnome-keyring
 use github.com/chlorm/elvish-ssh/gpg-agent
 use github.com/chlorm/elvish-ssh/ssh-agent
+use github.com/chlorm/elvish-stl/env
 use github.com/chlorm/elvish-stl/exec
 use github.com/chlorm/elvish-stl/io
 use github.com/chlorm/elvish-stl/os
@@ -68,8 +68,8 @@ fn cache-read {
     if (not (os:exists $CACHE-DIR)) {
         fail
     }
-    set-env 'SSH_AUTH_SOCK' (io:cat $CACHE-SOCKET)
-    set-env 'SSH_AGENT_PID' (io:cat $CACHE-PID)
+    env:set 'SSH_AUTH_SOCK' (io:cat $CACHE-SOCKET)
+    env:set 'SSH_AGENT_PID' (io:cat $CACHE-PID)
 }
 
 # NOTE: This is only meant as a fallback if the agent isn't running. It is
@@ -97,8 +97,8 @@ fn check-proper {|agent|
         # must kill the daemon and restart it manually.
         if (not (os:is-socket (get-socket $agent))) {
             exec:cmd e:kill (exec:cmd-out 'pidof' $agent)
-            unset-env 'SSH_AGENT_PID'
-            unset-env 'SSH_AUTH_SOCK'
+            env:unset 'SSH_AGENT_PID'
+            env:unset 'SSH_AUTH_SOCK'
             start-manually $agent
         }
     } else {
@@ -115,14 +115,14 @@ fn check-proper {|agent|
 
 fn init-instance {
     var tty = (exec:cmd-out 'tty')
-    set-env 'GPG_TTY' $tty
-    set-env 'SSH_TTY' $tty
+    env:set 'GPG_TTY' $tty
+    env:set 'SSH_TTY' $tty
     cache-read
 
     # FIXME: document HACK
     # HACK:
-    if ?(has-env 'SSH_ASKPASS' >$os:NULL) {
-        unset-env 'SSH_ASKPASS'
+    if ?(env:has 'SSH_ASKPASS' >$os:NULL) {
+        env:unset 'SSH_ASKPASS'
     }
 }
 

@@ -37,7 +37,7 @@ fn get-pinentry-cmd {
         'pinentry-kwallet'
     ]
 
-    put (utils:get-preferred-cmd 'PREFERRED_PINENTRY_CMDS' $pinentryCmds)
+    utils:get-preferred-cmd 'PREFERRED_PINENTRY_CMDS' $pinentryCmds
 }
 
 fn set-permissions {|agent|

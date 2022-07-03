@@ -16,6 +16,7 @@
 use github.com/chlorm/elvish-ssh/conf
 use github.com/chlorm/elvish-ssh/keygen
 
+
 fn init-session {
     keygen:generate-keys
     keygen:update-known-hosts

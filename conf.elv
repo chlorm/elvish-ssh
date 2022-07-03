@@ -20,6 +20,7 @@
 use github.com/chlorm/elvish-stl/io
 use github.com/chlorm/elvish-stl/os
 use github.com/chlorm/elvish-stl/path
+use github.com/chlorm/elvish-stl/re
 
 
 var DIR = (path:join (path:home) '.ssh')

@@ -15,6 +15,7 @@
 
 use github.com/chlorm/elvish-ssh/conf
 use github.com/chlorm/elvish-stl/exec
+use github.com/chlorm/elvish-stl/list
 use github.com/chlorm/elvish-stl/path
 
 
@@ -24,7 +25,7 @@ fn generate {|&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$
         'ed25519'
         'rsa'
     ]
-    var _ = (has-value $types $type)
+    var _ = (list:has $types $type)
 
     # FIXME: use elvish-stl
     var date = (exec:cmd-out 'date' '+%Y%m%d')
