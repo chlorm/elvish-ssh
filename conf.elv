@@ -32,6 +32,7 @@ fn set-permissions {
     os:chmod 0700 $DIR
 
     for i (path:scandir $DIR)[files] {
+        set i = (path:join $DIR $i)
         if (re:match 'PRIVATE KEY-----' [ (io:cat $i) ][0]) {
             # Private keys should never be readable by other users
             os:chmod 0600 $i
