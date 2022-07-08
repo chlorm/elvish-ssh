@@ -13,10 +13,6 @@
 # limitations under the License.
 
 
-# - Port ssh key management
-#   https://github.com/chlorm/kratos/tree/c82657c9565ce041ade093c473c3f6d0b25be0ad/plugins/ssh
-
-
 use github.com/chlorm/elvish-stl/io
 use github.com/chlorm/elvish-stl/os
 use github.com/chlorm/elvish-stl/path
@@ -42,6 +38,21 @@ fn set-permissions {
             # All files other than private keys need to be readable by sshd
             os:chmod 0644 $i
         }
+    }
+}
+
+# Accepts a list of paths to public keys to populate authorized_keys with.
+fn populate-authorized-keys {|@pubKeyFiles|
+    # Populates the authorized_keys file
+    var authKeysFile = (path:join $DIR 'authorized_keys')
+    if (os:exists $authKeysFile) {
+        os:remove $authKeysFile
+    }
+    os:touch $authKeysFile
+    # FIXME: windows support
+    os:chmod 0644 $authKeysFile
+    for pubKey $pubKeyFiles {
+        echo $pubKey >> $authKeysFile
     }
 }
 
