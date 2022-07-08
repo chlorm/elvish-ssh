@@ -17,6 +17,7 @@ use github.com/chlorm/elvish-ssh/conf
 use github.com/chlorm/elvish-stl/exec
 use github.com/chlorm/elvish-stl/list
 use github.com/chlorm/elvish-stl/path
+use github.com/chlorm/elvish-stl/platform
 
 
 fn generate {|&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$false|
@@ -29,7 +30,7 @@ fn generate {|&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$
 
     # FIXME: use elvish-stl
     var date = (exec:cmd-out 'date' '+%Y%m%d')
-    var name = $date'-'(exec:cmd-out 'hostname')
+    var name = $date'-'($platform:hostname)
     if $security-key {
         # FIXME: assert $device-name is not nil
         set name = $date'-'$device-name
