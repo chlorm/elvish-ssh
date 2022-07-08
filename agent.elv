@@ -24,8 +24,9 @@ use github.com/chlorm/elvish-stl/env
 use github.com/chlorm/elvish-stl/exec
 use github.com/chlorm/elvish-stl/io
 use github.com/chlorm/elvish-stl/os
-use github.com/chlorm/elvish-stl/utils
 use github.com/chlorm/elvish-stl/platform
+use github.com/chlorm/elvish-stl/proc
+use github.com/chlorm/elvish-stl/utils
 use github.com/chlorm/elvish-xdg/xdg-dirs
 
 
@@ -62,7 +63,7 @@ fn cache-write {|agent|
     os:makedir $CACHE-DIR
     os:chmod 0700 $CACHE-DIR
     print (get-socket $agent) >$CACHE-SOCKET
-    print (e:pidof $agent) >$CACHE-PID
+    print (proc:pidof $agent) >$CACHE-PID
 }
 
 fn cache-read {
@@ -88,16 +89,19 @@ fn start-manually {|agent|
 
 var proper-iter = 1
 fn check-proper {|agent|
-    var running = $false
-    if (e:pidof '-q' $agent) {
-        set running = $true
-    }
+    var agentPids = $nil
+    try {
+        var t = (proc:pidsof $agent)
+        set agentPids = $t
+    } catch _ { }
 
-    if $running {
+    if (not (eq $agentPids $nil)) {
         # If the agent is running on a socket that isn't the expected one we
         # must kill the daemon and restart it manually.
         if (not (os:is-socket (get-socket $agent))) {
-            exec:cmd e:kill (exec:cmd-out 'pidof' $agent)
+            for i $agentPids {
+                proc:kill $i
+            }
             env:unset 'SSH_AGENT_PID'
             env:unset 'SSH_AUTH_SOCK'
             start-manually $agent
