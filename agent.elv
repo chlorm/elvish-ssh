@@ -25,6 +25,7 @@ use github.com/chlorm/elvish-stl/exec
 use github.com/chlorm/elvish-stl/io
 use github.com/chlorm/elvish-stl/os
 use github.com/chlorm/elvish-stl/utils
+use github.com/chlorm/elvish-stl/platform
 use github.com/chlorm/elvish-xdg/xdg-dirs
 
 
@@ -114,9 +115,11 @@ fn check-proper {|agent|
 }
 
 fn init-instance {
-    var tty = (exec:cmd-out 'tty')
-    env:set 'GPG_TTY' $tty
-    env:set 'SSH_TTY' $tty
+    if (not $platform:windows) {
+        var tty = (exec:cmd-out 'tty')
+        env:set 'GPG_TTY' $tty
+        env:set 'SSH_TTY' $tty
+    }
     cache-read
 
     # FIXME: document HACK
