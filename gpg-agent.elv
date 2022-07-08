@@ -76,11 +76,11 @@ fn configure-scdaemon {
 # sockets explicty.
 fn start {
     # Hardcode socket locations to explicitly fail on configuration errors.
-    E:GPG_AGENT_SSH_SOCK_NAME=$SOCKET-SSH ^
-    E:GPG_AGENT_EXTRA_SOCK_NAME=$SOCKET-EXTRA ^
-    E:GPG_AGENT_BROWSER_SOCK_NAME=$SOCKET-BROWSER ^
-    E:GPG_AGENT_SOCK_NAME=$SOCKET ^
-    E:SCDAEMON_SOCK_NAME=$SOCKET-SCDAEMON ^
+    tmp E:GPG_AGENT_SSH_SOCK_NAME = $SOCKET-SSH; ^
+    tmp E:GPG_AGENT_EXTRA_SOCK_NAME = $SOCKET-EXTRA; ^
+    tmp E:GPG_AGENT_BROWSER_SOCK_NAME = $SOCKET-BROWSER; ^
+    tmp E:GPG_AGENT_SOCK_NAME = $SOCKET; ^
+    tmp E:SCDAEMON_SOCK_NAME = $SOCKET-SCDAEMON; ^
     e:gpg-agent ^
         '--daemon' ^
         '--pinentry-program' (get-pinentry-cmd) ^
