@@ -23,11 +23,12 @@ var DIR = (path:join (path:home) '.ssh')
 
 # Make sure all directories and files have the correct permissions
 # to ensure everything works with StrictModes enabled.
+# FIXME: windows support (chmod)
 fn set-permissions {
     os:chmod 0700 (path:home)
     os:chmod 0700 $DIR
 
-    for i (path:scandir $DIR)[files] {
+    for i (path:scandir $DIR)['files'] {
         set i = (path:join $DIR $i)
         if (re:match 'PRIVATE KEY-----' [ (io:cat $i) ][0]) {
             # Private keys should never be readable by other users

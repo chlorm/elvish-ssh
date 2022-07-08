@@ -61,6 +61,7 @@ fn get-socket {|agent|
 
 fn cache-write {|agent|
     os:makedir $CACHE-DIR
+    # FIXME: windows support
     os:chmod 0700 $CACHE-DIR
     print (get-socket $agent) >$CACHE-SOCKET
     print (proc:pidof $agent) >$CACHE-PID

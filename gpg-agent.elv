@@ -40,6 +40,7 @@ fn get-pinentry-cmd {
     utils:get-preferred-cmd 'PREFERRED_PINENTRY_CMDS' $pinentryCmds
 }
 
+# FIXME: windows support
 fn set-permissions {|agent|
     var home = (path:home)
     os:chmod 0700 $home
