@@ -32,7 +32,7 @@ fn generate {|&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$
     # FIXME: use elvish-stl
     # FIXME: windows support
     var date = (exec:cmd-out 'date' '+%Y%m%d')
-    var name = $date'-'($platform:hostname)
+    var name = $date'-'(platform:hostname)
     if $security-key {
         if (eq $device-name $nil) {
             fail
