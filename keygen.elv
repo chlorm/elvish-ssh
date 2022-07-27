@@ -51,7 +51,7 @@ fn generate {|&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$
         '-C' $name
         '-f' (path:join $conf:DIR 'id_'$type(if-sk '_sk')'-'$name)
     ]
-    if (!=s $passphrase $nil) {
+    if (not (eq $passphrase $nil)) {
         set cmdArgs = [ $@cmdArgs '-N' $passphrase ]
     }
     # FIXME: assert $security-key == $false
