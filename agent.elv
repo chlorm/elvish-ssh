@@ -121,7 +121,7 @@ fn check-proper {|agent|
 }
 
 fn init-instance {
-    if (not $platform:windows) {
+    if (not $platform:is-windows) {
         var tty = (exec:cmd-out 'tty')
         env:set 'GPG_TTY' $tty
         env:set 'SSH_TTY' $tty
