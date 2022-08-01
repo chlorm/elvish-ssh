@@ -16,7 +16,7 @@
 use github.com/chlorm/elvish-stl/exec
 use github.com/chlorm/elvish-stl/os
 use github.com/chlorm/elvish-stl/path
-use github.com/chlorm/elvish-stl/str
+use github.com/chlorm/elvish-stl/re
 use github.com/chlorm/elvish-xdg/xdg-dirs
 
 
@@ -33,6 +33,5 @@ fn start {
 
     set-permissions
 
-    var pid = (str:join " " [ (str:split " " $cmd[1]) ][3..])[..-1]
-    put $pid
+    var pid = (re:find 'pid ([0-9]+)\;' $cmd[-1])
 }
