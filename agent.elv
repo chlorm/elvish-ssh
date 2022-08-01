@@ -116,8 +116,8 @@ fn check-proper {|agent|
     if (> $proper-iter 3) {
         return
     }
-    check-proper $agent
     set proper-iter = (+ $proper-iter 1)
+    check-proper $agent
 }
 
 fn init-instance {
