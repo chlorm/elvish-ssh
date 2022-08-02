@@ -65,7 +65,7 @@ fn cache-write {|agent|
     # FIXME: windows support
     os:chmod 0700 $CACHE-DIR
     print (get-socket $agent) >$CACHE-SOCKET
-    print (proc:pidof $agent) >$CACHE-PID
+    print (proc:pidsof $agent)[0] >$CACHE-PID
 }
 
 fn cache-read {
