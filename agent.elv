@@ -102,17 +102,17 @@ fn check-proper {|agent|
         set agentPids = $t
     } catch _ { }
 
-    if (not (eq $agentPids $nil)) {
-        # If the agent is running on a socket that isn't the expected one we
-        # must kill the daemon and restart it manually.
-        if (not (os:is-socket (get-socket $agent))) {
-            for i $agentPids {
-                proc:kill $i
-            }
-            env:unset 'SSH_AGENT_PID'
-            env:unset 'SSH_AUTH_SOCK'
-            start-manually $agent
+    # If the agent is running on a socket that isn't the expected one we
+    # must kill the daemon and restart it manually.
+    if (os:is-socket (get-socket $agent)) {
+        return
+    } elif (not (eq $agentPids $nil)) {
+        for i $agentPids {
+            proc:kill $i
         }
+        env:unset 'SSH_AGENT_PID'
+        env:unset 'SSH_AUTH_SOCK'
+        start-manually $agent
     } else {
         start-manually $agent
     }
