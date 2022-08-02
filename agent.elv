@@ -1,4 +1,4 @@
-# Copyright (c) 2016, 2020, Cody Opel <cwopel@chlorm.net>
+# Copyright (c) 2016, 2020, 2022, Cody Opel <cwopel@chlorm.net>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,6 +39,16 @@ var s-gnome-keyring = 'gnome-keyring-daemon'
 var s-gpg-agent = 'gpg-agent'
 var s-ssh-agent = 'ssh-agent'
 
+var agent-socket = [&]
+set agent-socket[$s-gnome-keyring] = $gnome-keyring:SOCKET-SSH
+set agent-socket[$s-gpg-agent] = $gpg-agent:SOCKET-SSH
+set agent-socket[$s-ssh-agent] = $ssh-agent:SOCKET
+
+var agent-start = [&]
+set agent-start[$s-gnome-keyring] = $gnome-keyring:start~
+set agent-start[$s-gpg-agent] = $gpg-agent:start~
+set agent-start[$s-ssh-agent] = $ssh-agent:start~
+
 fn get-cmd {
     var agent-cmds = [
         $s-ssh-agent
@@ -50,14 +60,7 @@ fn get-cmd {
 }
 
 fn get-socket {|agent|
-    if (==s $s-gnome-keyring $agent) {
-        put $gnome-keyring:SOCKET-SSH
-    } elif (==s $s-gpg-agent $agent) {
-        put $gpg-agent:SOCKET-SSH
-    } elif (==s $s-ssh-agent $agent) {
-        put $ssh-agent:SOCKET
-    }
-    fail
+    put $agent-socket[$agent]
 }
 
 fn cache-write {|agent|
@@ -79,14 +82,7 @@ fn cache-read {
 # NOTE: This is only meant as a fallback if the agent isn't running. It is
 #       recommended to start the needed agents with your service manager.
 fn start-manually {|agent|
-    if (==s $s-gnome-keyring $agent) {
-        $gnome-keyring:start
-    } elif (==s $s-gpg-agent $agent) {
-        $gpg-agent:start
-    } elif (==s $s-ssh-agent $agent) {
-        $ssh-agent:start
-    }
-    fail
+    $agent-start[$agent]
 }
 
 var proper-iter = 1
