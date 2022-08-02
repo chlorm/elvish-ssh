@@ -70,7 +70,7 @@ fn cache-write {|agent|
 
 fn cache-read {
     if (not (os:exists $CACHE-DIR)) {
-        fail
+        fail 'Cache directory does not exist, session not initialized'
     }
     env:set 'SSH_AUTH_SOCK' (io:cat $CACHE-SOCKET)
     env:set 'SSH_AGENT_PID' (io:cat $CACHE-PID)
