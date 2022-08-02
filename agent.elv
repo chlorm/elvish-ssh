@@ -136,7 +136,7 @@ fn init-instance {
 }
 
 fn init-session {
-    var agent = (get-cmd)
+    var agent = (path:basename (get-cmd))
 
     check-proper $agent
     set-permissions $agent
