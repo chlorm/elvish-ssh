@@ -39,6 +39,11 @@ var s-gnome-keyring = 'gnome-keyring-daemon'
 var s-gpg-agent = 'gpg-agent'
 var s-ssh-agent = 'ssh-agent'
 
+var agent-permissions = [&]
+set agent-permissions[$s-gnome-keyring] = $gnome-keyring:set-permissions~
+set agent-permissions[$s-gpg-agent] = $gpg-agent:set-permissions~
+set agent-permissions[$s-ssh-agent] = $ssh-agent:set-permissions~
+
 var agent-socket = [&]
 set agent-socket[$s-gnome-keyring] = $gnome-keyring:SOCKET-SSH
 set agent-socket[$s-gpg-agent] = $gpg-agent:SOCKET-SSH
@@ -77,6 +82,10 @@ fn cache-read {
     }
     env:set 'SSH_AUTH_SOCK' (io:cat $CACHE-SOCKET)
     env:set 'SSH_AGENT_PID' (io:cat $CACHE-PID)
+}
+
+fn set-permissions {|agent|
+    $agent-permissions[$agent]
 }
 
 # NOTE: This is only meant as a fallback if the agent isn't running. It is
