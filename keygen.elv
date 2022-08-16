@@ -19,6 +19,7 @@ use github.com/chlorm/elvish-stl/list
 use github.com/chlorm/elvish-stl/os
 use github.com/chlorm/elvish-stl/path
 use github.com/chlorm/elvish-stl/platform
+use github.com/chlorm/elvish-stl/time
 
 
 fn generate {|&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$false|
@@ -29,10 +30,7 @@ fn generate {|&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$
     ]
     var _ = (list:has $types $type)
 
-    # FIXME: use elvish-stl
-    # FIXME: windows support
-    var date = (exec:cmd-out 'date' '+%Y%m%d')
-    var name = $date'-'(platform:hostname)
+    var name = (time:date)'-'(platform:hostname)
     if $security-key {
         if (eq $device-name $nil) {
             fail
