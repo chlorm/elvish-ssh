@@ -72,6 +72,7 @@ fn generate {|&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$
         os:makedirs $conf:DIR
     }
     if (not (os:is-file (path:join $conf:DIR $name'.pub'))) {
+        echo $@cmdArgs >&2
         e:ssh-keygen $@cmdArgs
     }
 }
