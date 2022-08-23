@@ -30,7 +30,8 @@ fn generate {|&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$
     ]
     var _ = (list:has $types $type)
 
-    var name = (time:date)'-'(platform:hostname)
+    var date = (time:date)
+    var name = $date'-'(platform:hostname)
     if $security-key {
         if (eq $device-name $nil) {
             fail
