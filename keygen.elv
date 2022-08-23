@@ -39,16 +39,18 @@ fn generate {|&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$
         set name = $date'-'$device-name
     }
 
-    fn if-sk {|s|
+    fn if-sk {|i s|
         if $security-key {
-            put $s
+            print $i$s
+        } else {
+            print $i
         }
     }
 
     var cmdArgs = [
-        '-t' $type(if-sk '-sk')
+        '-t' (if-sk $type '-sk')
         '-C' $name
-        '-f' (path:join $conf:DIR 'id_'$type(if-sk '_sk')'-'$name)
+        '-f' (path:join $conf:DIR 'id_'(if-sk $type '_sk')'-'$name)
     ]
     if (not (eq $passphrase $nil)) {
         set cmdArgs = [ $@cmdArgs '-N' $passphrase ]
