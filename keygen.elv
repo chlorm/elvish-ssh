@@ -64,7 +64,7 @@ fn generate {|&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$
             $@cmdArgs
             '-w' 'internal'
             '-O' 'resident'
-            '-O' 'application='$name
+            '-O' 'application=ssh:'$name
         ]
     }
 
