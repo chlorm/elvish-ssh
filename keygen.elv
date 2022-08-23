@@ -60,7 +60,7 @@ fn generate {|&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$
         set cmdArgs = [ $@cmdArgs '-b' '4096' ]
     }
     if $security-key {
-        var extra-args = [
+        set cmdArgs = [
             $@cmdArgs
             '-w' 'internal'
             '-O' 'resident'
