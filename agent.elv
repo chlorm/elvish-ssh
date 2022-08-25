@@ -61,7 +61,7 @@ fn get-cmd {
         $s-gpg-agent
     ]
 
-    put (utils:get-preferred-cmd 'PREFERRED_SSH_AGENTS' $agent-cmds)
+    utils:get-preferred-cmd 'PREFERRED_SSH_AGENTS' $agent-cmds
 }
 
 fn get-socket {|agent|
