@@ -147,4 +147,3 @@ fn init-session {
     set-permissions $agent
     cache-write $agent
 }
-

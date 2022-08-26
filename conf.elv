@@ -33,12 +33,15 @@ fn set-permissions {
         if (re:match 'PRIVATE KEY-----' [ (io:cat $i) ][0]) {
             # Private keys should never be readable by other users
             os:chmod 0600 $i
-        } elif (==s 'config' (path:basename $i)) {
-            os:chmod 0600 $i
-        } else {
-            # All files other than private keys need to be readable by sshd
-            os:chmod 0644 $i
+            continue
         }
+        if (==s 'config' (path:basename $i)) {
+            os:chmod 0600 $i
+            continue
+        }
+
+        # All files other than private keys need to be readable by sshd
+        os:chmod 0644 $i
     }
 }
 
