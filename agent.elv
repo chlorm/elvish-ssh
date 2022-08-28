@@ -65,7 +65,12 @@ fn get-cmd {
 }
 
 fn get-socket {|agent|
-    put $agent-socket[$agent]
+    try {
+        put $agent-socket[$agent]
+    } catch e {
+        echo "Can't find agent socket" >&2
+        fail $e
+    }
 }
 
 fn cache-write {|agent|
@@ -85,13 +90,23 @@ fn cache-read {
 }
 
 fn set-permissions {|agent|
-    $agent-permissions[$agent]
+    try {
+        $agent-permissions[$agent]
+    } catch e {
+        echo 'Issue setting agent permissions' >&2
+        fail $e
+    }
 }
 
 # NOTE: This is only meant as a fallback if the agent isn't running. It is
 #       recommended to start the needed agents with your service manager.
 fn start-manually {|agent|
-    $agent-start[$agent]
+    try {
+        $agent-start[$agent]
+    } catch e {
+        echo 'Failed to manually start agent' >&2
+        fail $e
+    }
 }
 
 var proper-iter = 1
@@ -119,7 +134,7 @@ fn check-proper {|agent|
 
     # Recursively check
     if (> $proper-iter 3) {
-        return
+        fail 'Failed to start preferred agent'
     }
     set proper-iter = (+ $proper-iter 1)
     check-proper $agent
