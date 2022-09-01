@@ -1,4 +1,4 @@
-# Copyright (c) 2020, Cody Opel <cwopel@chlorm.net>
+# Copyright (c) 2020, 2022, Cody Opel <cwopel@chlorm.net>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,41 +22,76 @@ use github.com/chlorm/elvish-stl/platform
 use github.com/chlorm/elvish-stl/time
 
 
-fn generate {|&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$false|
+fn -valid-types {|type|
     var types = [
         'ecdsa'
         'ed25519'
         'rsa'
     ]
     var _ = (list:has $types $type)
+}
 
-    var date = (time:date)
-    var name = $date'-'(platform:hostname)
+fn -ensure-conf-dir {
+    if (not (os:is-dir $conf:DIR)) {
+        os:makedirs $conf:DIR
+    }
+}
+
+fn -prevent-overwrite {|f|
+    if (not (os:is-file $f)) {
+        fail 'Key already exists: '$f
+    }
+}
+
+# TODO: automate setting this with a truncated hash of the following:
+#       {date} {device serial} {passphrase or truncated hash of signingkey}
+#       serial: ykman list --serials
+# &comment - Descriptive name of key
+fn key-comment {|security-key &comment=$nil|
+    if (not (eq $comment $nil)) {
+        put $comment
+        return
+    }
+
+    var name = (os:user)'@'(platform:hostname)
     if $security-key {
-        if (eq $device-name $nil) {
-            fail
-        }
-        set name = $date'-'$device-name
+        var date = (time:date)
+        set name = $date'-'$comment
+    }
+    put $name
+}
+
+# https://man.openbsd.org/ssh-keygen.1
+# &type         - Do NOT change the default unless you know what you are doing.
+# &passphrase   - If not passed the user will be prompted for a passphrase.
+#                 This is intended for automated generation usually without
+#                 a passphrase (e.g. '').
+# &comment      - Descriptive name of key
+# &security-key - Hardware security key (e.g. Yubikey)
+fn new {|&type='ed25519' &passphrase=$nil &comment=$nil &security-key=$false|
+    -valid-types $type
+
+    if (eq $comment $nil) {
+        set comment = (key-comment &comment=$comment $false)
     }
 
-    fn if-sk {|i s|
-        if $security-key {
-            print $i$s
-        } else {
-            print $i
-        }
+    var type2 = $type
+    if  $security-key {
+        set type = $type'-sk'
+        set type2 = $type2'_sk'
     }
+
+    var out = (path:join $conf:DIR 'id_'$type2'-'$comment)
 
     var cmdArgs = [
-        '-t' (if-sk $type '-sk')
-        '-C' $name
-        '-f' (path:join $conf:DIR 'id_'(if-sk $type '_sk')'-'$name)
+        '-t' $type
+        '-C' $comment
+        '-f' $out
     ]
     if (not (eq $passphrase $nil)) {
         set cmdArgs = [ $@cmdArgs '-N' $passphrase ]
     }
-    # FIXME: assert $security-key == $false
-    if (==s $type 'rsa') {
+    if (and (==s $type 'rsa') (not $security-key)) {
         set cmdArgs = [ $@cmdArgs '-b' '4096' ]
     }
     if $security-key {
@@ -64,17 +99,15 @@ fn generate {|&type='ed25519' &passphrase=$nil &device-name=$nil &security-key=$
             $@cmdArgs
             '-w' 'internal'
             '-O' 'resident'
-            '-O' 'application=ssh:'$name
+            '-O' 'application=ssh:'$comment
         ]
     }
 
-    if (not (os:is-dir $conf:DIR)) {
-        os:makedirs $conf:DIR
-    }
-    if (not (os:is-file (path:join $conf:DIR $name'.pub'))) {
-        echo $@cmdArgs >&2
-        e:ssh-keygen $@cmdArgs
-    }
+    -ensure-conf-dir
+    -prevent-overwrite $out
+    -prevent-overwrite $out'.pub'
+    echo $@cmdArgs >&2
+    e:ssh-keygen $@cmdArgs
 }
 
 fn update-known-hosts {
