@@ -147,12 +147,6 @@ fn init-instance {
         env:set 'SSH_TTY' $tty
     }
     cache-read
-
-    # FIXME: document HACK
-    # HACK:
-    if ?(env:has 'SSH_ASKPASS' >$os:NULL) {
-        env:unset 'SSH_ASKPASS'
-    }
 }
 
 fn init-session {
