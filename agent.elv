@@ -27,6 +27,7 @@ use github.com/chlorm/elvish-stl/os
 use github.com/chlorm/elvish-stl/path
 use github.com/chlorm/elvish-stl/platform
 use github.com/chlorm/elvish-stl/proc
+use github.com/chlorm/elvish-stl/re
 use github.com/chlorm/elvish-stl/utils
 use github.com/chlorm/elvish-xdg/xdg-dirs
 
@@ -151,6 +152,9 @@ fn init-instance {
 
 fn init-session {
     var agent = (path:basename (get-cmd))
+    if $platform:is-windows {
+        set agent = (re:replace '\.exe$' '' $agent)
+    }
 
     check-proper $agent
     set-permissions $agent
