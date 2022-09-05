@@ -38,7 +38,7 @@ fn -ensure-conf-dir {
 }
 
 fn -prevent-overwrite {|f|
-    if (not (os:is-file $f)) {
+    if (os:is-file $f) {
         fail 'Key already exists: '$f
     }
 }
