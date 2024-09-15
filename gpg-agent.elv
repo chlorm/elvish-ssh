@@ -43,10 +43,10 @@ fn get-pinentry-cmd {
 # FIXME: windows support
 fn set-permissions {|agent|
     var home = (path:home)
-    os:chmod 0700 $home
-    os:chmod 0700 (path:join $home '.gnupg')
+    os:chmod 700 $home
+    os:chmod 700 (path:join $home '.gnupg')
 
-    os:chmod 0700 $SOCKET-DIR
+    os:chmod 700 $SOCKET-DIR
     var sockets = [
         $SOCKET
         $SOCKET-BROWSER
@@ -54,7 +54,7 @@ fn set-permissions {|agent|
         $SOCKET-SSH
     ]
     for i $sockets {
-        os:chmod 0600 $i
+        os:chmod 600 $i
     }
 }
 

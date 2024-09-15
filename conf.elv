@@ -25,23 +25,23 @@ var DIR = (path:join (path:home) '.ssh')
 # to ensure everything works with StrictModes enabled.
 # FIXME: windows support (chmod)
 fn set-permissions {
-    os:chmod 0700 (path:home)
-    os:chmod 0700 $DIR
+    os:chmod 700 (path:home)
+    os:chmod 700 $DIR
 
     for i (path:scandir $DIR)['files'] {
         set i = (path:join $DIR $i)
         if (re:match 'PRIVATE KEY-----' [ (io:cat $i) ][0]) {
             # Private keys should never be readable by other users
-            os:chmod 0600 $i
+            os:chmod 600 $i
             continue
         }
         if (==s 'config' (path:basename $i)) {
-            os:chmod 0600 $i
+            os:chmod 600 $i
             continue
         }
 
         # All files other than private keys need to be readable by sshd
-        os:chmod 0644 $i
+        os:chmod 644 $i
     }
 }
 
@@ -54,7 +54,7 @@ fn populate-authorized-keys {|@pubKeyFiles|
     }
     os:touch $authKeysFile
     # FIXME: windows support
-    os:chmod 0644 $authKeysFile
+    os:chmod 644 $authKeysFile
     for pubKey $pubKeyFiles {
         echo $pubKey >> $authKeysFile
     }

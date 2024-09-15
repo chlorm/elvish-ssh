@@ -25,14 +25,14 @@ var SOCKET-SSH = (path:join $SOCKET-DIR 'ssh')
 
 # FIXME: windows support
 fn set-permissions {|agent|
-    os:chmod 0700 $SOCKET-DIR
+    os:chmod 700 $SOCKET-DIR
     var sockets = [
         $SOCKET-CONTROL
         $SOCKET-PKCS11
         $SOCKET-SSH
     ]
     for i $sockets {
-        os:chmod 0600 $i
+        os:chmod 600 $i
     }
 }
 

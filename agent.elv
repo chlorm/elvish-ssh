@@ -76,7 +76,7 @@ fn get-socket {|agent|
 
 fn cache-write {|agent|
     os:makedir $CACHE-DIR
-    os:chmod 0700 $CACHE-DIR
+    os:chmod 700 $CACHE-DIR
     print (get-socket $agent) >$CACHE-SOCKET
     print (proc:pidsof $agent)[0] >$CACHE-PID
 }
