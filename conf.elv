@@ -17,6 +17,7 @@ use github.com/chlorm/elvish-stl/io
 use github.com/chlorm/elvish-stl/os
 use github.com/chlorm/elvish-stl/path
 use github.com/chlorm/elvish-stl/re
+use github.com/chlorm/elvish-stl/str
 
 
 var DIR = (path:join (path:home) '.ssh')
@@ -30,7 +31,7 @@ fn set-permissions {
 
     for i (path:scandir $DIR)['files'] {
         set i = (path:join $DIR $i)
-        if (re:match 'PRIVATE KEY-----' [ (io:cat $i) ][0]) {
+        if (re:match 'PRIVATE KEY-----' [ (str:to-lines (io:open $i)) ][0]) {
             # Private keys should never be readable by other users
             os:chmod 600 $i
             continue
