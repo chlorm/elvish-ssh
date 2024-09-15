@@ -76,7 +76,6 @@ fn get-socket {|agent|
 
 fn cache-write {|agent|
     os:makedir $CACHE-DIR
-    # FIXME: windows support
     os:chmod 0700 $CACHE-DIR
     print (get-socket $agent) >$CACHE-SOCKET
     print (proc:pidsof $agent)[0] >$CACHE-PID
@@ -142,20 +141,21 @@ fn check-proper {|agent|
 }
 
 fn init-instance {
-    if (not $platform:is-windows) {
-        var tty = (exec:cmd-out 'tty')
-        env:set 'GPG_TTY' $tty
-        env:set 'SSH_TTY' $tty
+    if $platform:is-windows {
+        env:set 'GIT_SSH' (search-external 'ssh')
+        return
     }
+
+    var tty = (exec:cmd-out 'tty')
+    env:set 'GPG_TTY' $tty
+    env:set 'SSH_TTY' $tty
     cache-read
 }
 
 fn init-session {
-    var agent = (path:basename (get-cmd))
-    if $platform:is-windows {
-        set agent = (re:replace '\.exe$' '' $agent)
-    }
+    if ($platform:is-windows) { return }
 
+    var agent = (path:basename (get-cmd))
     check-proper $agent
     set-permissions $agent
     cache-write $agent
