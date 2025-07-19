@@ -153,7 +153,7 @@ fn init-instance {
 }
 
 fn init-session {
-    if ($platform:is-windows) { return }
+    if $platform:is-windows { return }
 
     var agent = (path:basename (get-cmd))
     check-proper $agent
