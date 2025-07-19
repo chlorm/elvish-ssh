@@ -85,8 +85,8 @@ fn cache-read {
     if (not (os:exists $CACHE-DIR)) {
         fail 'Cache directory does not exist, session not initialized'
     }
-    env:set 'SSH_AUTH_SOCK' (io:open $CACHE-SOCKET)
-    env:set 'SSH_AGENT_PID' (io:open $CACHE-PID)
+    env:set 'SSH_AUTH_SOCK' (io:read $CACHE-SOCKET)
+    env:set 'SSH_AGENT_PID' (io:read $CACHE-PID)
 }
 
 fn set-permissions {|agent|
